@@ -1,7 +1,6 @@
 import csv
 from typing import List
 from typing import Tuple
-import math
 """Simple pagination."""
 
 
@@ -35,11 +34,11 @@ class Server:
 
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
         """Return a page of the dataset based on pagination parameters."""
-        assert isinstance(page, int) and page > 0
-        assert isinstance(page_size, int) and page_size > 0
+        assert type(page) == int and type(page_size) == int
+        assert page_size > 0 and page > 0
 
         dataset = self.dataset()
         begin, finish = index_range(page, page_size)
-        if begin >= len(dataset):
+        if begin > len(dataset):
             return []
         return dataset[begin:finish]
