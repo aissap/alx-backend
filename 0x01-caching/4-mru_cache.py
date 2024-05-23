@@ -16,13 +16,18 @@ class MRUCache(BaseCaching):
         if key is None or item is None:
             return
 
-        self.update_usage_order(key)
-        self.cache_data[key] = item
+        if key in self.cache_data:
+            self.update_usage_order(key)
+            self.cache_data[key] = item
+            return
 
-        if len(self.cache_data) > BaseCaching.MAX_ITEMS:
+        if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
             discarded_key = self.usage_order.pop()
             del self.cache_data[discarded_key]
             print(f"DISCARD: {discarded_key}")
+
+        self.cache_data[key] = item
+        self.update_usage_order(key)
 
     def get(self, key):
         """ Get an item by key """
