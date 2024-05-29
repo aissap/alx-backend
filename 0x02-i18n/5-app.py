@@ -27,11 +27,14 @@ users = {
 def get_user(user_id: int) -> dict:
     '''Set user information as global variable'''
     login_id = request.args.get('login_as')
-    return users.get(int(login_id)) if login_id else None
+    if login_id:
+        return users.get(int(login_id))
+    else:
+        return None
 
 
 @app.before_request
-def before_request():
+def before_request() -> None:
     '''Get user information based on user ID'''
     g.user = get_user()
 
