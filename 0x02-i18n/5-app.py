@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-from flask import Flask, render_template, request
+from flask import Flask, render_template, g, request
 from flask_babel import Babel
+from typing import Union
 
 
 class Config:
