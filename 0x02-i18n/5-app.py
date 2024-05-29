@@ -47,7 +47,7 @@ def get_locale() -> str:
     if locale_param in app.config['LANGUAGES']:
         return locale_param
     return request.accept_languages.best_match(app.config['LANGUAGES'])
-    if g.user and g.user['locale'] in app.config['LANGUAGES']:
+    if g.user['locale'] in app.config['LANGUAGES']:
         return g.user['locale']
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
@@ -59,4 +59,4 @@ def index() -> str:
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
