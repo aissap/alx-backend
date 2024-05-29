@@ -5,7 +5,6 @@ from flask_babel import Babel
 from typing import Dict, Union
 
 
-
 class Config:
     """Configuration Babel."""
     LANGUAGES = ["en", "fr"]
