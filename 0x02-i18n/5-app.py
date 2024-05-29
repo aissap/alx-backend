@@ -6,7 +6,6 @@ from typing import Union
 
 class Config:
     """Configuration Babel."""
-    DEBUG = True
     LANGUAGES = ["en", "fr"]
     BABEL_DEFAULT_LOCALE = "en"
     BABEL_DEFAULT_TIMEZONE = "UTC"
@@ -15,6 +14,8 @@ class Config:
 app = Flask(__name__)
 app.config.from_object(Config)
 babel = Babel(app)
+
+
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
     2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
@@ -23,16 +24,16 @@ users = {
 }
 
 
-def get_user(user_id: int) -> Union[dict, None]:
-    '''Get user information based on user ID'''
-    return users.get(user_id)
+def get_user(user_id: int) -> dict:
+    '''Set user information as global variable'''
+    login_id = request.args.get('login_as')
+    return users.get(int(login_id)) if login_id else None
 
 
 @app.before_request
 def before_request():
-    '''Set user information as global variable'''
-    user_id = request.args.get('login_as')
-    g.user = get_user(int(user_id)) if user_id else None
+    '''Get user information based on user ID'''
+    g.user = get_user()
 
 
 @babel.localeselector
@@ -47,8 +48,8 @@ def get_locale() -> str:
 @app.route('/')
 def index() -> str:
     """Route for the index page."""
-    return render_template("4-index.html")
+    return render_template("5-index.html")
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
