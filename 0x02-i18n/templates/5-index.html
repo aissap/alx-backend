@@ -1,16 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ get_locale() }}">
 <head>
     <title>{{ _('home_title') }}</title>
 </head>
 <body>
-    <h1>{{ _('home_header') }}</h1>
-    <p>
-    	{% if user %}
-		{{ _('logged_in_as')|format(username=user['name']) }}
-	{% else %}
-		{{ _('not_logged_in') }}
-	{% endif %}
-    </p>
+    {% if g.user %}
+        <p>{{ _('logged_in_as', username=g.user['name']) }}</p>
+    {% else %}
+        <p>{{ _('not_logged_in') }}</p>
+    {% endif %}
 </body>
 </html>
