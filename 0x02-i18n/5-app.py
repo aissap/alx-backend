@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
+"""Task 5: Mock logging in"""
+
+
 from flask import Flask, render_template, g, request
 from flask_babel import Babel
-from typing import Union
+from typing import Union, Dict
 
 
 class Config:
@@ -24,11 +27,14 @@ users = {
 }
 
 
-def get_user(user_id: int) -> dict:
+def get_user() -> Union[Dict, None]:
     '''Set user information as global variable'''
     login_id = request.args.get('login_as')
     if login_id:
-        return users.get(int(login_id))
+        try:
+            return users.get(int(login_id))
+        except ValueError:
+            return None
     return None
 
 
@@ -54,4 +60,4 @@ def index() -> str:
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
