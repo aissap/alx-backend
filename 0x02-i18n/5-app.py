@@ -29,8 +29,7 @@ def get_user(user_id: int) -> dict:
     login_id = request.args.get('login_as')
     if login_id:
         return users.get(int(login_id))
-    else:
-        return None
+    return None
 
 
 @app.before_request
