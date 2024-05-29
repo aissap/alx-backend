@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
-from flask import Flask, render_template, request
+"""Force locale with URL parameter."""
+from flask import Flask, render_template, request, g
 from flask_babel import Babel
+from typing import Dict, Union
+
 
 
 class Config:
@@ -31,4 +34,4 @@ def index() -> str:
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=5000)
