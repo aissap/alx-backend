@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Task 5: Mock logging in"""
+"""Mock logging in
+"""
 
-from flask import Flask, render_template, g, request
+from typing import Dict, Union
+from flask import Flask, render_template, request, g
 from flask_babel import Babel, _
-from typing import Union, Dict
 
 
 class Config:
-    """Configuration Babel."""
+    """Configure Flask app."""
     LANGUAGES = ["en", "fr"]
     BABEL_DEFAULT_LOCALE = "en"
     BABEL_DEFAULT_TIMEZONE = "UTC"
@@ -16,7 +17,6 @@ class Config:
 app = Flask(__name__)
 app.config.from_object(Config)
 babel = Babel(app)
-
 
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
@@ -27,7 +27,7 @@ users = {
 
 
 def get_user() -> Union[Dict, None]:
-    '''Set user information as global variable'''
+    """Get the user based on a user id from the URL parameter."""
     login_id = request.args.get('login_as')
     if login_id:
         return users.get(int(login_id))
@@ -36,27 +36,26 @@ def get_user() -> Union[Dict, None]:
 
 @app.before_request
 def before_request() -> None:
-    '''Get user information based on user ID'''
+    """Routine before each request's resolution."""
     g.user = get_user()
 
 
-"""@babel.localeselector
+@babel.localeselector
 def get_locale() -> str:
-    Get match with the supported languages.
+    """Match supported languages."""
     locale_param = request.args.get('locale')
     if locale_param in app.config['LANGUAGES']:
-        return locale_param
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
-    if g.user['locale'] in app.config['LANGUAGES']:
+        return local_param
+    if g.user in app.config['LANGUAGES']:
         return g.user['locale']
-    return request.accept_languages.best_match(app.config['LANGUAGES'])"""
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
 @app.route('/')
 def index() -> str:
-    """Route for the index page."""
+    """Render the homepage."""
     return render_template("5-index.html")
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host="0.0.0.0", port=5000)
