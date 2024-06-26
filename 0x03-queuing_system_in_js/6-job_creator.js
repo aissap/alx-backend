@@ -1,38 +1,29 @@
-import kue from 'kue';
-import redis from 'redis';
+const kue = require('kue');
 
-const client = redis.createClient();
+const que = kue.createQueue();
 
-const queue = kue.createQueue({ redis: { createClientFactory: () => client } });
-
-const jobData = {
-  phoneNumber: '1234567890',
-  message: 'Notification message here'
+const Data = {
+  phoneNumber: '4153518780',
+  message: 'This is the code 1234 to verify your account'
 };
 
-const job = queue.create('push_notification_code', jobData);
+const job = que.createJob('push_notification_code', Data)
 
-// Handle job creation success
-job.on('enqueue', function (id, type) {
-  console.log(`Notification job created: ${job.id}`);
+job.save((err) => {
+    if (err) {
+      console.error('Error creating job:', err);
+      return;
+    }
+    console.log(`Notification job created: ${job.id}`);
 });
-
-job.on('complete', function () {
-  console.log('Notification job completed');
-  process.exit(0); // Exit after job completion
-});
-
-job.on('failed', function () {
-  console.log('Notification job failed');
-  process.exit(1); // Exit after job failure
-});
-
-job.save();
-
-process.on('SIGINT', function () {
-  queue.shutdown(5000, function (err) {
-    console.log('Kue shutdown: ', err || 'OK');
-    client.quit();
+job.on('complete', () => {
+    console.log('Notification job completed');
     process.exit(0);
-  });
 });
+
+job.on('failed', (err) => {
+    console.error('Notification job failed:', err);
+    process.exit(1);
+});
+
+console.log('Job creator is running...');
