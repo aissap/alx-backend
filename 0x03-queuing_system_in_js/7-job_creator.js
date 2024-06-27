@@ -1,8 +1,4 @@
-import kue from 'kue';
-import redis from 'redis';
-
-const client = redis.createClient();
-const queue = kue.createQueue({ redis: { createClientFactory: () => client } });
+const kue = require('kue');
 
 const jobs = [
   {
@@ -51,10 +47,12 @@ const jobs = [
   }
 ];
 
+const queue = kue.createQueue();
+
 jobs.forEach((jobData, index) => {
   const job = queue.create('push_notification_code_2', jobData);
 
-  job.on('enqueue', function (id, type) {
+  job.on('enqueue', function () {
     console.log(`Notification job created: ${job.id}`);
   });
 
@@ -72,13 +70,3 @@ jobs.forEach((jobData, index) => {
 
   job.save();
 });
-
-process.on('SIGINT', function () {
-  queue.shutdown(5000, function (err) {
-    console.log('Kue shutdown: ', err || 'OK');
-    client.quit();
-    process.exit(0);
-  });
-});
-
-console.log('Job creator is running...');
